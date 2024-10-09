@@ -57,4 +57,7 @@ print('len(subformulas(formula8)) <= length(formula8):', len(subformulas(formula
 
 print(f'Atoms of formula8: {atoms(formula8)}')
 
+print(f'Number of atoms of formula8 is: {number_of_atoms(formula8)}')
+
 print(f'Number of connectives of formula8 is: {number_of_connectives(formula8)}')
+
