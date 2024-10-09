@@ -14,7 +14,7 @@ formula7 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Atom('r')))  #
 formula8 = Implies(Not(And(Atom('p'), Atom('s'))), And(Atom('q'), Not(And(Atom('p'), Atom('s')))))
 # ((¬(p /\ s)) -> (q /\ (¬(p /\ s))))
 
-# formula9 = Not('q')
+formula9 = Not(Atom('q'))
 
 
 print(formula1 == formula3)
@@ -60,4 +60,6 @@ print(f'Atoms of formula8: {atoms(formula8)}')
 print(f'Number of atoms of formula8 is: {number_of_atoms(formula8)}')
 
 print(f'Number of connectives of formula8 is: {number_of_connectives(formula8)}')
-
+print(f'formula8 is literal: {is_literal(formula8)}')
+print(f'formula1 is literal: {is_literal(formula1)}')
+print(f'formula9 is literal: {is_literal(formula9)}')
