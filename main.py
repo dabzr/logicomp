@@ -63,3 +63,4 @@ print(f'Number of connectives of formula8 is: {number_of_connectives(formula8)}'
 print(f'formula8 is literal: {is_literal(formula8)}')
 print(f'formula1 is literal: {is_literal(formula1)}')
 print(f'formula9 is literal: {is_literal(formula9)}')
+print(f'formula5 is literal: {is_literal(formula5)}')
