@@ -40,7 +40,7 @@ def subformulas(formula: Formula):
 #  we have shown in class that, for all formula A, len(subformulas(A)) <= length(A).
 
 
-def atoms(formula: Formula):
+def atoms(formula: Formula) -> set:
     """Returns the set of all atoms occurring in a formula.
 
     For example, observe the piece of code below.
@@ -52,7 +52,15 @@ def atoms(formula: Formula):
     This piece of code above prints: p, s
     (Note that there is no repetition of p)
     """
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+    atoms_set = set()
+    if isinstance(formula, Atom):
+        atoms_set.add(formula.name)
+    if isinstance(formula, Not):
+        atoms_set.update(atoms(formula.inner))
+    if isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
+        atoms_set.update(atoms(formula.left))
+        atoms_set.update(atoms(formula.right))
+    return atoms_set
 
 
 def number_of_atoms(formula: Formula):
