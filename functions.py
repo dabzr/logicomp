@@ -91,10 +91,9 @@ def is_literal(formula: Formula):
     """Returns True if formula is a literal. It returns False, otherwise"""
     if isinstance(formula, Atom):
         return True
-    if isinstance(formula, Not):
-        return is_literal(formula.inner)
-    if isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
-        return False
+    if isinstance(formula, Not) and isinstance(formula.inner, Atom):
+        return True
+    return False
 
 def substitution(formula: Formula, old_subformula: Formula, new_subformula: Formula):
     """Returns a new formula obtained by replacing all occurrences
