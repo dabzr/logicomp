@@ -54,7 +54,7 @@ def atoms(formula: Formula) -> set:
     """
     atoms_set = set()
     if isinstance(formula, Atom):
-        atoms_set.add(formula.name)
+        atoms_set.add(formula)
     if isinstance(formula, Not):
         atoms_set.update(atoms(formula.inner))
     if isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
