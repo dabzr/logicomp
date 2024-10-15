@@ -112,7 +112,11 @@ def substitution(formula: Formula, old_subformula: Formula, new_subformula: Form
 
 def is_clause(formula: Formula):
     """Returns True if formula is a clause. It returns False, otherwise"""
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+    if isinstance(formula, Or):
+        condL = is_literal(formula.left) or is_clause(formula.left)
+        condR = is_literal(formula.right) or is_clause(formula.right)
+        return condL and condR
+    return is_literal(formula)
 
 
 def is_negation_normal_form(formula: Formula):
