@@ -103,30 +103,52 @@ def is_clause(formula: Formula) -> bool:
     return is_literal(formula)
 
 
-def is_negation_normal_form(formula: Formula):
+def is_negation_normal_form(formula: Formula) -> bool:
     """Returns True if formula is in negation normal form.
     Returns False, otherwise."""
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+    if isinstance(formula, Not):
+        return isinstance(formula.inner, Atom)
+    if isinstance(formula, (Implies, And, Or)):
+        return is_negation_normal_form(formula.left) and is_negation_normal_form(formula.right)
+    return True
 
 
-def is_cnf(formula: Formula):
+def is_cnf(formula: Formula) -> bool:
     """Returns True if formula is in conjunctive normal form.
     Returns False, otherwise."""
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+    if isinstance(formula, And):
+        condL = is_clause(formula.left) or is_cnf(formula.left)
+        condR = is_clause(formula.right) or is_cnf(formula.right)
+        return condL and condR
+    return False
 
 
-def is_term(formula: Formula):
+
+def is_term(formula: Formula) -> bool:
     """Returns True if formula is a term. It returns False, otherwise"""
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+    if isinstance(formula, And):
+        return is_clause(formula.left) and is_clause(formula.right)
+    return is_literal(formula)
 
 
-def is_dnf(formula: Formula):
+
+def is_dnf(formula: Formula) -> bool:
     """Returns True if formula is in disjunctive normal form.
     Returns False, otherwise."""
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+    if isinstance(formula, And):
+        condL = is_term(formula.left) or is_dnf(formula.left)
+        condR = is_term(formula.right) or is_dnf(formula.right)
+        return condL and condR
+    return False
 
 
 def is_decomposable_negation_normal_form(formula: Formula):
     """Returns True if formula is in decomposable negation normal form.
     Returns False, otherwise."""
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+    pass
+
+def height(formula: Formula):
+    """Defina uma função recursiva formula_height(formula) que retorna a altura de
+formula, onde a altura é o maior numero de conectivos entre o conectivo mais externo
+e as fórmulas atômicas. Por exemplo, para a fórmula (p → (q ∧ r)) ∨ ¬s, a altura é 3"""
+    pass
