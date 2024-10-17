@@ -106,9 +106,11 @@ def is_clause(formula: Formula) -> bool:
 def is_negation_normal_form(formula: Formula) -> bool:
     """Returns True if formula is in negation normal form.
     Returns False, otherwise."""
+    if isinstance(formula, Implies):
+        return False
     if isinstance(formula, Not):
         return isinstance(formula.inner, Atom)
-    if isinstance(formula, (Implies, And, Or)):
+    if isinstance(formula, (And, Or)):
         return is_negation_normal_form(formula.left) and is_negation_normal_form(formula.right)
     return True
 
@@ -142,10 +144,17 @@ def is_dnf(formula: Formula) -> bool:
     return False
 
 
-def is_decomposable_negation_normal_form(formula: Formula):
+def is_decomposable_negation_normal_form(formula: Formula) -> bool:
     """Returns True if formula is in decomposable negation normal form.
     Returns False, otherwise."""
-    pass
+    if is_negation_normal_form(formula):
+        if isinstance(formula, And):
+            if not (atoms(formula.left) & atoms(formula.right)):
+                return True
+            return is_decomposable_negation_normal_form(formula.left) and is_decomposable_negation_normal_form(formula.right)
+        if isinstance(formula, Or):
+            return is_decomposable_negation_normal_form(formula.left) and is_decomposable_negation_normal_form(formula.right)
+    return False
 
 def height(formula: Formula):
     """Defina uma função recursiva formula_height(formula) que retorna a altura de

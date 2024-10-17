@@ -87,3 +87,15 @@ cnf = And(Not(Atom('p')), And(Or(Atom('p'), Not(Atom('q'))), Or(Atom('s'), Atom(
 print(f"is_cnf({cnf}): {is_cnf(cnf)}")
 cnf = Or(Not(Atom('p')), And(Or(Atom('p'), Not(Atom('q'))), And(Atom('s'), Atom('p'))))
 print(f"is_cnf({cnf}): {is_cnf(cnf)}")
+dnnf = Or(And(Or(Atom('a'), Not(Atom('b'))), Or(Atom('c'), Atom('d'))), And(Or(Atom('a'), Atom('b')), Or(Not(Atom('c')), Not(Atom('d')))))
+print(f"is_dnnf({dnnf}): {is_decomposable_negation_normal_form(dnnf)}")
+
+from semantics import *
+
+val = {
+        Atom('p'): True,
+        Atom('q'): False,
+        Atom('s'): True
+      } 
+
+print(f"formula6 ({formula6}) tem v = {val} e portanto tem valor verdade {truth_value(formula6, val)}")
