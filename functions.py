@@ -137,7 +137,7 @@ def is_term(formula: Formula) -> bool:
 def is_dnf(formula: Formula) -> bool:
     """Returns True if formula is in disjunctive normal form.
     Returns False, otherwise."""
-    if isinstance(formula, And):
+    if isinstance(formula, Or):
         condL = is_term(formula.left) or is_dnf(formula.left)
         condR = is_term(formula.right) or is_dnf(formula.right)
         return condL and condR
