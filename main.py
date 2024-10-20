@@ -89,6 +89,8 @@ cnf = Or(Not(Atom('p')), And(Or(Atom('p'), Not(Atom('q'))), And(Atom('s'), Atom(
 print(f"is_cnf({cnf}): {is_cnf(cnf)}")
 dnnf = Or(And(Or(Atom('a'), Not(Atom('b'))), Or(Atom('c'), Atom('d'))), And(Or(Atom('a'), Atom('b')), Or(Not(Atom('c')), Not(Atom('d')))))
 print(f"is_dnnf({dnnf}): {is_decomposable_negation_normal_form(dnnf)}")
+height_test = Or(Implies(Atom('p'), Or(Atom('q'), Atom('r'))), Not(Atom('s')))
+print(f"height({height_test}): {height(height_test)}")
 
 from semantics import *
 
@@ -99,3 +101,5 @@ val = {
       } 
 
 print(f"formula6 ({formula6}) tem v = {val} e portanto tem valor verdade {truth_value(formula6, val)}")
+
+

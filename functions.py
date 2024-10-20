@@ -156,8 +156,12 @@ def is_decomposable_negation_normal_form(formula: Formula) -> bool:
             return is_decomposable_negation_normal_form(formula.left) and is_decomposable_negation_normal_form(formula.right)
     return False
 
-def height(formula: Formula):
+def height(formula: Formula) -> int:
     """Defina uma função recursiva formula_height(formula) que retorna a altura de
 formula, onde a altura é o maior numero de conectivos entre o conectivo mais externo
 e as fórmulas atômicas. Por exemplo, para a fórmula (p → (q ∧ r)) ∨ ¬s, a altura é 3"""
-    pass
+    if isinstance(formula, Not):
+        return 1 + height(formula.inner)
+    if isinstance(formula, (And, Or, Implies)):
+        return 1 + max(height(formula.left), height(formula.right))
+    return 0
