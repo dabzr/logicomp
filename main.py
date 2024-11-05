@@ -114,3 +114,5 @@ print(f"{formula10} é equivalente a {formula12}? {is_logical_equivalence(formul
 tautologia = Implies(Atom('p'), Atom('p'))
 print(f"{tautologia} é uma tautologia? {is_valid(tautologia)}")
 print(f"{formula10} é uma tautologia? {is_valid(formula10)}")
+print(f"{tautologia} é satisfazivel? {satisfiability_brute_force(tautologia)}")
+print(f"{formula10} é satisfazivel? {satisfiability_brute_force(formula10)}")

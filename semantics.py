@@ -78,7 +78,10 @@ def satisfiability_brute_force(formula):
     """Checks whether formula is satisfiable.
     In other words, if the input formula is satisfiable, it returns an interpretation that assigns true to the formula.
     Otherwise, it returns False."""
-    pass
+    sat_dict = {True: 0, False: 0}
+    for i in create_truth_table(formula):
+        sat_dict[i[formula]]+=1
+    return sat_dict[True] != 0 and sat_dict[False] != 0
     # ======== YOUR CODE HERE ========
 
 
