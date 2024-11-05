@@ -61,19 +61,14 @@ def is_logical_consequence(premises, conclusion):  # function TT-Entails? in the
 
 def is_logical_equivalence(formula1, formula2): 
     """Checks whether formula1 and formula2 are logically equivalent."""
-    if atoms(formula1) != atoms(formula2):
-        return False
-    for tt_f1, tt_f2 in zip(create_truth_table(formula1), create_truth_table(formula2)):
-        if tt_f1[formula1] != tt_f2[formula2]:
-            return False
-    return True
+    return is_valid(And(Implies(formula1, formula2), Implies(formula2, formula1)))
 
     
 
 def is_valid(formula):
     """Returns True if formula is a logically valid (tautology). Otherwise, it returns False"""
     for i in create_truth_table(formula):
-        if i[formula] == False:
+        if not i[formula]:
             return False
     return True
     # ======== YOUR CODE HERE ========
