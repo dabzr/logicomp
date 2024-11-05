@@ -59,9 +59,8 @@ def is_logical_consequence(premises, conclusion):  # function TT-Entails? in the
     for premise in premises:
         formulas.append(Implies(premise, conclusion))
     if len(formulas) == 1:
-        formula = formulas[0]
-    else:
-        formula = And(formulas[0], formulas[1])
+        return formulas[0] 
+    formula = And(formulas[0], formulas[1])
     for f in range(2, len(formulas)):
         formula = And(formula, formulas[f])
     return is_valid(formula)
