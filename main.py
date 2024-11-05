@@ -109,6 +109,8 @@ print(f"{formula10} é equivalente a {formula11}? {is_logical_equivalence(formul
 print(f"{formula9} é equivalente a {formula2}? {is_logical_equivalence(formula9, formula2)}")
 print(f"{formula3} é equivalente a {formula4}? {is_logical_equivalence(formula3, formula4)}")
 print(f"{formula8} é equivalente a {formula7}? {is_logical_equivalence(formula8, formula7)}")
+formula12 = Or(Implies(Atom('p'), Atom('q')), And(Atom('q'), Not(Atom('q'))))
+print(f"{formula10} é equivalente a {formula12}? {is_logical_equivalence(formula10, formula12)}")
 tautologia = Implies(Atom('p'), Atom('p'))
 print(f"{tautologia} é uma tautologia? {is_valid(tautologia)}")
 print(f"{formula10} é uma tautologia? {is_valid(formula10)}")
