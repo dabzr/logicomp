@@ -102,4 +102,13 @@ val = {
 
 print(f"formula6 ({formula6}) tem v = {val} e portanto tem valor verdade {truth_value(formula6, val)}")
 
-
+print(create_truth_table(formula8))
+formula10 = Implies(Atom('p'), Atom('q'))
+formula11 = Or(Not(Atom('p')), Atom('q'))
+print(f"{formula10} é equivalente a {formula11}? {is_logical_equivalence(formula10, formula11)}")
+print(f"{formula9} é equivalente a {formula2}? {is_logical_equivalence(formula9, formula2)}")
+print(f"{formula3} é equivalente a {formula4}? {is_logical_equivalence(formula3, formula4)}")
+print(f"{formula8} é equivalente a {formula7}? {is_logical_equivalence(formula8, formula7)}")
+tautologia = Implies(Atom('p'), Atom('p'))
+print(f"{tautologia} é uma tautologia? {is_valid(tautologia)}")
+print(f"{formula10} é uma tautologia? {is_valid(formula10)}")
