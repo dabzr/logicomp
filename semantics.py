@@ -41,7 +41,7 @@ def partial_truth_value(formula: Formula, partial_interpretation: dict):
     return None
 
 def create_truth_table(formula: Formula):
-    atoms_list = sorted(list(atoms(formula)), key=str)
+    atoms_list = list(atoms(formula))
     truth_table = []
     num_atoms = len(atoms_list)
     size = 2 ** num_atoms
@@ -55,15 +55,22 @@ def create_truth_table(formula: Formula):
 
 def is_logical_consequence(premises, conclusion):  # function TT-Entails? in the book AIMA.
     """Returns True if the conclusion is a logical consequence of the set of premises. Otherwise, it returns False."""
-    pass
-    # ======== YOUR CODE HERE ========
+    formulas = []
+    for premise in premises:
+        formulas.append(Implies(premise, conclusion))
+    if len(formulas) == 1:
+        formula = formulas[0]
+    else:
+        formula = And(formulas[0], formulas[1])
+    for f in range(2, len(formulas)):
+        formula = And(formula, formulas[f])
+    return is_valid(formula)
+
 
 
 def is_logical_equivalence(formula1, formula2): 
     """Checks whether formula1 and formula2 are logically equivalent."""
-    return is_valid(And(Implies(formula1, formula2), Implies(formula2, formula1)))
-
-    
+    return is_valid(And(Implies(formula1, formula2), Implies(formula2, formula1)))    
 
 def is_valid(formula):
     """Returns True if formula is a logically valid (tautology). Otherwise, it returns False"""
@@ -71,17 +78,14 @@ def is_valid(formula):
         if not i[formula]:
             return False
     return True
-    # ======== YOUR CODE HERE ========
 
 
 def satisfiability_brute_force(formula):
     """Checks whether formula is satisfiable.
     In other words, if the input formula is satisfiable, it returns an interpretation that assigns true to the formula.
     Otherwise, it returns False."""
-    sat_dict = {True: 0, False: 0}
     for i in create_truth_table(formula):
-        sat_dict[i[formula]]+=1
-    return sat_dict[True] != 0 and sat_dict[False] != 0
-    # ======== YOUR CODE HERE ========
-
+        if i[formula]:
+            return True
+    return False 
 

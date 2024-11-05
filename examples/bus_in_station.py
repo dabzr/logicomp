@@ -4,7 +4,9 @@ João não chegou atrasado para a reunião.
 O trem chegou tarde na estação.
 É possível concluir que tinha ônibus na estação?
 """
-
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from formula import *
 from semantics import *
 
