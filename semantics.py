@@ -1,6 +1,7 @@
 """The goal in this module is to define functions associated with the semantics of formulas in propositional logic. """
 
 
+from typing import List
 from formula import Formula, Not, Or, And, Implies, Atom
 from functions import atoms
 
@@ -53,18 +54,16 @@ def create_truth_table(formula: Formula):
         truth_table.append(logic_dict)
     return truth_table
 
-def is_logical_consequence(premises, conclusion):  # function TT-Entails? in the book AIMA.
+def is_logical_consequence(premises: List[Formula], conclusion: Formula):  # function TT-Entails? in the book AIMA.
     """Returns True if the conclusion is a logical consequence of the set of premises. Otherwise, it returns False."""
-    formulas = []
-    for premise in premises:
-        formulas.append(Implies(premise, conclusion))
-    if len(formulas) == 1:
-        formula = formulas[0]
-    else:
-        formula = And(formulas[0], formulas[1])
-    for f in range(2, len(formulas)):
-        formula = And(formula, formulas[f])
-    return is_valid(formula)
+    if not premises:
+       return is_valid(conclusion)
+    if len(premises) == 1:
+        return is_valid(Implies(premises[0], conclusion))
+    formula = And(premises[0], premises[1])
+    for i in range(2, len(premises)):
+        formula = And(formula, premises[i])
+    return is_valid(Implies(formula, conclusion))
 
 
 
