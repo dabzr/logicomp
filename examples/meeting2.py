@@ -4,8 +4,12 @@ Bridget não pode na Quarta.
 Charles não pode na Sexta.
 David só pode na Quinta ou na Sexta.
 Existe um dia que eles possam se reunir satisfazendo todas as demandas?"""
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from semantics import *
+from formula import Atom, And, Or, Not
+from semantics import satisfiability_brute_force
 
 meeting_monday = Atom('reuniao na segunda')
 meeting_tuesday = Atom('reuniao na terca')

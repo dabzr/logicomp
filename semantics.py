@@ -1,6 +1,5 @@
 """The goal in this module is to define functions associated with the semantics of formulas in propositional logic. """
 
-
 from typing import List
 from formula import Formula, Not, Or, And, Implies, Atom
 from functions import atoms
@@ -64,8 +63,6 @@ def is_logical_consequence(premises: List[Formula], conclusion: Formula):  # fun
     for i in range(2, len(premises)):
         formula = And(formula, premises[i])
     return is_valid(Implies(formula, conclusion))
-
-
 
 def is_logical_equivalence(formula1, formula2): 
     """Checks whether formula1 and formula2 are logically equivalent."""

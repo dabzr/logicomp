@@ -7,8 +7,8 @@ O trem chegou tarde na estação.
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from formula import *
-from semantics import *
+from formula import Atom, Implies, Not, And
+from semantics import is_logical_consequence
 
 trem_tarde = Atom('o trem chegou tarde')
 onibus_estacao = Atom('tinha ônibus na estação')

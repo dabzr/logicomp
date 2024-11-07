@@ -3,7 +3,8 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from semantics import *
+from formula import Atom, Implies, Not, And
+from semantics import is_logical_equivalence
 
 ganhar = Atom('joão ganha a eleição')
 mais_escolaridade = Atom('a escolaridade melhora')
