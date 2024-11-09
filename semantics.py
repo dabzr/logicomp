@@ -31,7 +31,8 @@ def partial_truth_value(formula: Formula, interp: dict):
     if isinstance(formula, And):
         return partial_truth_value(formula.left, interp) and partial_truth_value(formula.right, interp)
     if isinstance(formula, Implies):
-        return not partial_truth_value(formula.left, interp) or partial_truth_value(formula.right, interp)
+        if partial_truth_value(formula.left, interp) is not None or partial_truth_value(formula.right, interp) is True:
+            return not partial_truth_value(formula.left, interp) or partial_truth_value(formula.right, interp)
     return None
 
 def create_truth_table(formula: Formula):
