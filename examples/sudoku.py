@@ -1,4 +1,9 @@
-from semantics import *
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from formula import Atom, Not, And, Or
+from semantics import sat_interpretation
+from functools import reduce
 import time
 
 '''
@@ -6,10 +11,10 @@ No sudoku 4x4 é preciso preencher os quadrados de um grid de 4 linhas e 4 colun
 e eles não podem se repetir na mesma linha, coluna ou subgrid.
 '''
 
-grid_test1 = [[0, 1, 4, 3],
-              [4, 3, 2, 0],
-              [1, 0, 3, 4],
-              [3, 4, 1, 0]]
+grid_test1 = [[2, 1, 4, 3],
+              [4, 3, 2, 1],
+              [1, 2, 3, 4],
+              [3, 4, 1, 2]]
 
 grid_test2 = [[0, 4, 3, 2],
               [0, 0, 1, 4],
@@ -38,12 +43,7 @@ def and_all(list_formulas):
     :param list_formulas: a list of formulas
     :return: And formula
     """
-    first_formula = list_formulas[0]
-    del list_formulas[0]
-    for formula in list_formulas:
-        first_formula = And(first_formula, formula)
-    return first_formula
-
+    return reduce(lambda acc, f: And(acc, f), list_formulas)
 
 def or_all(list_formulas):
     """
@@ -53,13 +53,7 @@ def or_all(list_formulas):
     :param list_formulas: a list of formulas
     :return: Or formula
     """
-    first_formula = list_formulas[0]
-    del list_formulas[0]
-    for formula in list_formulas:
-        first_formula = Or(first_formula, formula)
-    return first_formula
-
-
+    return reduce(lambda acc, f: Or(acc, f), list_formulas)
 # the solution must agree with the given digits:
 def given_digits_constraints(grid):
     """
@@ -173,6 +167,8 @@ def sudoku_solution(grid):
     that satisfies the formula.
     :param grid: sudoku grid
     """
+
+    start_time = time.time()
     final_formula = And(
         And(
             And(
@@ -186,7 +182,12 @@ def sudoku_solution(grid):
         ),
         subgrids_constrains(grid)
     )
-    solution = satisfiability_brute_force(final_formula)
+    end_time = time.time()
+    print(f'Tempo para gerar formula: {end_time - start_time}')
+    start_time = time.time()
+    solution = sat_interpretation(final_formula)
+    end_time = time.time()
+    print(f'Tempo para gerar interpretação: {end_time - start_time}')
     if solution:
         for i in range(len(grid)):
             for j in range(len(grid)):

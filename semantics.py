@@ -1,5 +1,6 @@
 """The goal in this module is to define functions associated with the semantics of formulas in propositional logic. """
 
+from time import time
 from typing import List
 from formula import Formula, Not, Or, And, Implies, Atom
 from functions import atoms
@@ -37,13 +38,12 @@ def partial_truth_value(formula: Formula, interp: dict):
 
 def create_truth_table(formula: Formula):
     atoms_list = list(atoms(formula))
-    truth_combinations = product([False, True], repeat=len(atoms_list))
-    truth_table = []
-    for combination in truth_combinations:
-        row = dict(zip(atoms_list, combination)) 
+    print(f"Quantidade de combinações: {len(atoms_list) ** 2}")
+    def create_row(combination):
+        row = dict(zip(atoms_list, combination))
         row[formula] = truth_value(formula, row)
-        truth_table.append(row)
-    return truth_table
+        return row
+    yield from map(create_row, product([False, True], repeat=len(atoms_list)))
 
 def is_logical_consequence(premises: List[Formula], conclusion: Formula):  # function TT-Entails? in the book AIMA.
     """Returns True if the conclusion is a logical consequence of the set of premises. Otherwise, it returns False."""
@@ -62,3 +62,11 @@ def satisfiability_brute_force(formula):
     In other words, if the input formula is satisfiable, it returns an interpretation that assigns true to the formula.
     Otherwise, it returns False."""
     return not all(i[formula] is False for i in create_truth_table(formula))
+
+def sat_interpretation(formula):
+    """If the formula is satisfiable, then it will return a satisfiable interpretation, else it will return None."""
+    for i in create_truth_table(formula):
+        if i[formula]:
+            return i
+    return None
+#    next((i for i in create_truth_table(formula) if i[formula]), None)
