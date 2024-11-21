@@ -55,10 +55,10 @@ def is_logical_equivalence(formula1, formula2):
 
 def is_valid(formula):
     """Returns True if formula is a logically valid (tautology). Otherwise, it returns False"""
-    return all([i[formula] is True for i in create_truth_table(formula)])
+    return all(i[formula] is True for i in create_truth_table(formula))
 
 def satisfiability_brute_force(formula):
     """Checks whether formula is satisfiable.
     In other words, if the input formula is satisfiable, it returns an interpretation that assigns true to the formula.
     Otherwise, it returns False."""
-    return not all([i[formula] is False for i in create_truth_table(formula)])
+    return not all(i[formula] is False for i in create_truth_table(formula))

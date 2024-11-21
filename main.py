@@ -118,3 +118,8 @@ print(f"{tautologia} é satisfazivel? {satisfiability_brute_force(tautologia)}")
 print(f"{formula10} é satisfazivel? {satisfiability_brute_force(formula10)}")
 formula13 = And(Atom('p'), Not(Atom('p')))
 print(f"{formula13} é satisfazivel? {satisfiability_brute_force(formula13)}")
+
+premissas = [Implies(Atom('c'), Atom('v')), Implies(And(And(Not(Atom('s')), Atom('p')), Not(Atom('c'))), Atom('v')), Implies(And(Not(Atom('c')), Atom('s')), Not(Atom('v'))),Implies(And(And(Not(Atom('s')), Not(Atom('p'))), Not(Atom('c'))), Not(Atom('v')))]
+conclusao = Implies(And(Atom('v'), Not(Atom('c'))), Atom('p')) 
+print(f"{premissas} |- {conclusao}?")
+print(is_logical_consequence(premissas, conclusao))
