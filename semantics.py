@@ -3,7 +3,7 @@
 from time import time
 from typing import List
 from formula import Formula, Not, Or, And, Implies, Atom
-from functions import atoms
+from functions import atoms, is_literal
 from functools import reduce
 from itertools import product
 
@@ -37,12 +37,25 @@ def partial_truth_value(formula: Formula, interp: dict):
     return None
 
 def create_truth_table(formula: Formula):
-    atoms_list = list(atoms(formula))
+    interp = get_partial_interpretation(formula)
+    atoms_list = [i for i in atoms(formula) if i not in interp]
     def create_row(combination):
         row = dict(zip(atoms_list, combination))
+        row = row | interp
         row[formula] = truth_value(formula, row)
         return row
     yield from map(create_row, product([False, True], repeat=len(atoms_list)))
+
+def get_partial_interpretation(formula: Formula):
+    interp = {}
+    if isinstance(formula, Atom):
+        interp[formula] = True
+    if isinstance(formula, Not) and is_literal(formula):
+        interp = get_partial_interpretation(formula.inner)
+        interp[formula.inner] = not interp[formula.inner]
+    if isinstance(formula, And):
+        interp = get_partial_interpretation(formula.left) | get_partial_interpretation(formula.right)
+    return interp
 
 def is_logical_consequence(premises: List[Formula], conclusion: Formula):  # function TT-Entails? in the book AIMA.
     """Returns True if the conclusion is a logical consequence of the set of premises. Otherwise, it returns False."""
@@ -68,4 +81,3 @@ def sat_interpretation(formula):
         if i[formula]:
             return i
     return None
-#    next((i for i in create_truth_table(formula) if i[formula]), None)

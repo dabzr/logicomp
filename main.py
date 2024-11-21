@@ -123,3 +123,5 @@ premissas = [Implies(Atom('c'), Atom('v')), Implies(And(And(Not(Atom('s')), Atom
 conclusao = Implies(And(Atom('v'), Not(Atom('c'))), Atom('p')) 
 print(f"{premissas} |- {conclusao}?")
 print(is_logical_consequence(premissas, conclusao))
+
+print(get_partial_interpretation(And(Atom("p"), And(Not(Atom('q')), And(Not(Not(Atom('r'))), Atom('s'))))))

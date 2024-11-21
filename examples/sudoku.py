@@ -11,15 +11,20 @@ No sudoku 4x4 é preciso preencher os quadrados de um grid de 4 linhas e 4 colun
 e eles não podem se repetir na mesma linha, coluna ou subgrid.
 '''
 
-grid_test1 = [[2, 1, 4, 3],
-              [4, 3, 2, 1],
-              [1, 2, 3, 4],
-              [3, 4, 1, 2]]
+grid_test1 = [[0, 1, 4, 3],
+              [4, 3, 2, 0],
+              [1, 0, 3, 4],
+              [3, 4, 1, 0]]
 
 grid_test2 = [[0, 4, 3, 2],
               [0, 0, 1, 4],
               [2, 3, 0, 1],
               [4, 1, 2, 0]]
+
+grid_test3 = [[0, 0, 0, 3],
+              [0, 4, 0, 0],
+              [0, 0, 3, 2],
+              [0, 0, 0, 0]]
 
 '''
 grid_test1_ solution = [[2, 1, 4, 3],
@@ -193,16 +198,17 @@ def sudoku_solution(grid):
             for j in range(len(grid)):
                 if grid[i][j] == 0:
                     for n in range(len(grid)):
-                        if solution[str(i + 1) + '_' + str(j + 1) + '_' + str(n + 1)]:
+                        if solution[Atom(str(i + 1) + '_' + str(j + 1) + '_' + str(n + 1))]:
                             grid[i][j] = n + 1
                             break
-        print(grid)
+        for row in grid:
+            print(row)
     else:
         print('Sudoku sem solução!')
 
 
 start_time = time.time()
 print('Solução do sudoku:')
-sudoku_solution(grid_test1)
+sudoku_solution(grid_test3)
 end_time = time.time()
 print('Time:', end_time - start_time)
