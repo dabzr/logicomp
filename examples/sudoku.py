@@ -209,6 +209,6 @@ def sudoku_solution(grid):
 
 start_time = time.time()
 print('Solução do sudoku:')
-sudoku_solution(grid_test3)
+sudoku_solution(grid_test2)
 end_time = time.time()
 print('Time:', end_time - start_time)

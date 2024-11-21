@@ -40,8 +40,7 @@ def create_truth_table(formula: Formula):
     interp = get_partial_interpretation(formula)
     atoms_list = [i for i in atoms(formula) if i not in interp]
     def create_row(combination):
-        row = dict(zip(atoms_list, combination))
-        row = row | interp
+        row = dict(zip(atoms_list, combination)) | interp
         row[formula] = truth_value(formula, row)
         return row
     yield from map(create_row, product([False, True], repeat=len(atoms_list)))
