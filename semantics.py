@@ -38,7 +38,6 @@ def partial_truth_value(formula: Formula, interp: dict):
 
 def create_truth_table(formula: Formula):
     atoms_list = list(atoms(formula))
-    print(f"Quantidade de combinações: {len(atoms_list) ** 2}")
     def create_row(combination):
         row = dict(zip(atoms_list, combination))
         row[formula] = truth_value(formula, row)
