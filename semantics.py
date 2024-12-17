@@ -82,6 +82,21 @@ def duplo_satisfativel(f):
     and_all = reduce(lambda acc, x: And(acc, x), lst)
     return sat_interpretation(And(f, Not(and_all))) is not False
 
+def all_models(f):
+    first = sat_interpretation(f)
+    if not first:
+        return False
+    lst2 = []
+    while first is not False:
+        lst2.append(first)
+        lst = []
+        for key, value in first.items():
+            atom = key if value else Not(key)
+            lst.append(atom)
+        and_all = reduce(lambda acc, x: And(acc, x), lst)
+        f = And(f, Not(and_all))
+        first = sat_interpretation(f)
+    return lst2
 
 def sat_interpretation(formula):
     """Checks whether formula is satisfiable.
@@ -96,6 +111,8 @@ def sat_interpretation(formula):
 teste = Implies(Atom('p'), Atom('q'))
 print(f"{teste} é satisfatível? {sat_interpretation(teste)}")
 print(f"{teste} é duplamente satisfatível? {duplo_satisfativel(teste)}")
+print(f"{teste} é verdadeiro nas seguintes valorações: {all_models(teste)}")
 teste2 = Not(teste)
 print(f"{teste2} é satisfatível? {sat_interpretation(teste2)}")
 print(f"{teste2} é duplamente satisfatível? {duplo_satisfativel(teste2)}")
+print(f"{teste2} é verdadeiro nas seguintes valorações: {all_models(teste2)}")
