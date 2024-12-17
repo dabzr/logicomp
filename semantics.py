@@ -87,15 +87,17 @@ def all_models(f):
     if not first:
         return False
     lst2 = []
+    f2 = f
     while first is not False:
+        first[f] = first.pop(f2)
         lst2.append(first)
         lst = []
         for key, value in first.items():
             atom = key if value else Not(key)
             lst.append(atom)
         and_all = reduce(lambda acc, x: And(acc, x), lst)
-        f = And(f, Not(and_all))
-        first = sat_interpretation(f)
+        f2 = And(f2, Not(and_all))
+        first = sat_interpretation(f2)
     return lst2
 
 def sat_interpretation(formula):
