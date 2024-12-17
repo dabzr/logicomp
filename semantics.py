@@ -1,6 +1,5 @@
 """The goal in this module is to define functions associated with the semantics of formulas in propositional logic. """
 
-from time import time
 from typing import List
 from formula import Formula, Not, Or, And, Implies, Atom
 from functions import atoms, is_literal
@@ -69,14 +68,34 @@ def is_valid(formula):
     return all(i[formula] is True for i in create_truth_table(formula))
 
 def satisfiability_brute_force(formula):
+    """it will return true if is satisfiable and false if it isnt"""
+    return not all(i[formula] is False for i in create_truth_table(formula))
+
+def duplo_satisfativel(f):
+    first = sat_interpretation(f)
+    if not first:
+        return False
+    lst = []
+    for key, value in first.items():
+        atom = key if value else Not(key)
+        lst.append(atom)
+    and_all = reduce(lambda acc, x: And(acc, x), lst)
+    return sat_interpretation(And(f, Not(and_all))) is not False
+
+
+def sat_interpretation(formula):
     """Checks whether formula is satisfiable.
     In other words, if the input formula is satisfiable, it returns an interpretation that assigns true to the formula.
     Otherwise, it returns False."""
-    return not all(i[formula] is False for i in create_truth_table(formula))
-
-def sat_interpretation(formula):
-    """If the formula is satisfiable, then it will return a satisfiable interpretation, else it will return None."""
     for i in create_truth_table(formula):
         if i[formula]:
             return i
-    return None
+    return False
+
+
+teste = Implies(Atom('p'), Atom('q'))
+print(f"{teste} é satisfatível? {sat_interpretation(teste)}")
+print(f"{teste} é duplamente satisfatível? {duplo_satisfativel(teste)}")
+teste2 = Not(teste)
+print(f"{teste2} é satisfatível? {sat_interpretation(teste2)}")
+print(f"{teste2} é duplamente satisfatível? {duplo_satisfativel(teste2)}")
