@@ -4,36 +4,24 @@ def sat_dpll(f: Formula):
     formula = f
     if not is_cnf(f):
         formula = to_cnf(f)
-    s = remove_duplicates(cnf_to_set(formula))
+    s = get_clauses_list(formula)
     first = next(iter(s[-1]))
     pos, neg = first, negate(first)
-    return sat_rec(pos, s) or sat_rec(neg, s) 
+    return sat_rec(pos, s, set()) or sat_rec(neg, s, set()) 
 
-def sat_rec(f: Formula, lst: list[set[Formula]]):
-    while True:
-        if not lst:
-            return True
-        if f not in lst[-1] and negate(f) not in lst[-1]:
-            if lst[-1] == set():
-                return False
-            f = next(iter(lst[-1]))
-            continue
-        if f in lst[-1]:
-            lst.pop()
-            continue
-        if negate(f) in lst[-1]:
-            lst[-1].discard(negate(f))
-            if lst[-1] == set():
-                return False
-            f = next(iter(lst[-1]))
-            continue
-
-def remove_duplicates(lst):
-    stack = []
-    for i in lst:
-        if i not in stack:
-            stack.append(i)
-    return stack
+def sat_rec(literal: Formula, clauses: list[set[Formula]], visited_literals: set):
+    if negate(literal) in visited_literals:
+        return False
+    if not clauses:
+        return True
+    visited_literals.add(literal)
+    if literal in clauses[-1]:
+        return sat_rec(literal, clauses[:-1], visited_literals)
+    if negate(literal) in clauses[-1]:
+        if clauses[-1] == {negate(literal)}:
+            return False
+        clauses[-1].remove(negate(literal))
+    return sat_rec(next(iter(clauses[-1])), clauses, visited_literals)
 
 def negate(f: Formula) -> Formula:
     if isinstance(f, Not):
@@ -95,7 +83,7 @@ def distribute(f: Formula) -> Formula:
         return Implies(distribute(f.left), distribute(f.right))
     return f
 
-def cnf_to_set(f: Formula) -> list[set[Formula]]:
+def get_clauses_list(f: Formula) -> list[set[Formula]]:
     clauses = all_clauses_from_cnf(f)
     return all_literals_from_cnf(clauses)
 
@@ -115,18 +103,5 @@ def all_literals_from_cnf(clauses: set[Formula]) -> list[set[Formula]]:
             return literals_in_clause(f.right, s)
         s.add(f)
         return s
-    return remove_duplicates(list((map(lambda x: literals_in_clause(x, set()), clauses))))
+    return list((map(lambda x: literals_in_clause(x, set()), clauses)))
 
-formula = And(And(Not(Atom("p")), Atom("q")), Not(Atom("q")))
-formula_cnf = to_cnf(formula)
-formula_set = cnf_to_set(formula_cnf)
-print(f"Formula: {formula}")
-print(f"Formula equivalente na CNF: {formula_cnf}")
-print(f"CNF como set: {formula_set}")
-formula_unsat = And(Atom('p'), Not(Atom('p')))
-formula_sat = Implies(Atom('p'), Atom('q'))
-formula_valid = Or(Atom('p'), Not(Atom('p')))
-
-print(f"is {formula_unsat} satisfiable? {sat_dpll(formula_unsat)}")
-print(f"is {formula_sat} satisfiable? {sat_dpll(formula_sat)}")
-print(f"is {formula_valid} satisfiable? {sat_dpll(formula_valid)}")

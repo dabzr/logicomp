@@ -109,12 +109,3 @@ def sat_interpretation(formula):
             return i
     return False
 
-
-teste = Implies(Atom('p'), Atom('q'))
-print(f"{teste} é satisfatível? {sat_interpretation(teste)}")
-print(f"{teste} é duplamente satisfatível? {duplo_satisfativel(teste)}")
-print(f"{teste} é verdadeiro nas seguintes valorações: {all_models(teste)}")
-teste2 = Not(teste)
-print(f"{teste2} é satisfatível? {sat_interpretation(teste2)}")
-print(f"{teste2} é duplamente satisfatível? {duplo_satisfativel(teste2)}")
-print(f"{teste2} é verdadeiro nas seguintes valorações: {all_models(teste2)}")

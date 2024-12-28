@@ -1,8 +1,9 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from formula import Atom, Not, And, Or
+from formula import Atom, Not, And, Or, Implies
 from semantics import sat_interpretation
+from dpll import sat_dpll
 from functools import reduce
 import time
 
@@ -25,6 +26,11 @@ grid_test3 = [[0, 0, 0, 3],
               [0, 4, 0, 0],
               [0, 0, 3, 2],
               [0, 0, 0, 0]]
+
+grid_unsat = [[1, 1, 4, 3],
+              [4, 3, 2, 4],
+              [1, 3, 3, 4],
+              [3, 4, 1, 4]]
 
 '''
 grid_test1_ solution = [[2, 1, 4, 3],
@@ -173,7 +179,6 @@ def sudoku_solution(grid):
     :param grid: sudoku grid
     """
 
-    start_time = time.time()
     final_formula = And(
         And(
             And(
@@ -187,11 +192,10 @@ def sudoku_solution(grid):
         ),
         subgrids_constrains(grid)
     )
-    end_time = time.time()
-    print(f'Tempo para gerar formula: {end_time - start_time}')
-    start_time = time.time()
+#    start_time = time.time()
     solution = sat_interpretation(final_formula)
-    end_time = time.time()
+#    end_time = time.time()
+"""
     print(f'Tempo para gerar interpretação: {end_time - start_time}')
     if solution:
         for i in range(len(grid)):
@@ -205,10 +209,48 @@ def sudoku_solution(grid):
             print(row)
     else:
         print('Sudoku sem solução!')
+"""
+def sudoku_solution_dpll(grid):
+    final_formula = And(
+        And(
+            And(
+                given_digits_constraints(grid),
+                rows_constraints(grid)
+            ),
+            And(
+                cells_constraints(grid),
+                columns_constraints(grid)
+            ),
+        ),
+        subgrids_constrains(grid)
+    )
+    solution = sat_dpll(final_formula)
+    print(f"Is that sudoku satisfiable? {solution}")
 
+teste = grid_unsat
+print("sudoku: ")
+for i in teste:
+    print(i)
 
+print('Solução do sudoku (dpll):')
 start_time = time.time()
-print('Solução do sudoku:')
-sudoku_solution(grid_test2)
+sudoku_solution_dpll(teste)
 end_time = time.time()
 print('Time:', end_time - start_time)
+formula_teste = And(Atom('p'), Not(Atom('p')))
+print(f'{formula_teste} é satisfativel? {sat_dpll(formula_teste)}')
+formula_teste = And(Or(Atom('p'), Atom('q')), And(Not(Atom('p')), Not(Atom('q'))))
+print(f'{formula_teste} é satisfativel? {sat_dpll(formula_teste)}')
+formula_teste = And(Or(Atom('p'), Atom('q')), And(Or(Not(Atom('p')), Not(Atom('q'))), And(Atom('p'), Atom('q'))))
+print(f'{formula_teste} é satisfativel? {sat_dpll(formula_teste)}')
+formula_teste = And(Implies(Atom('p'), Atom('q')), And(Atom('p'), Not(Atom('q'))))
+print(f'{formula_teste} é satisfativel? {sat_dpll(formula_teste)}')
+formula_sat = Implies(Atom('p'), Atom('q'))
+formula_valid = Or(Atom('p'), Not(Atom('p')))
+print(f"{formula_sat} é satisfativel? {sat_dpll(formula_sat)}")
+print(f"{formula_valid} satisfativel? {sat_dpll(formula_valid)}")
+#start_time = time.time()
+#print('Solução do sudoku (brute force):')
+#sudoku_solution(teste)
+#end_time = time.time()
+#print('Time:', end_time - start_time)
