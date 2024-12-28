@@ -5,8 +5,7 @@ def sat_dpll(f: Formula):
     f = to_cnf(f) if not is_cnf(f) else f
     s = get_clauses_list(f)
     first = next(iter(s[-1]))
-    pos, neg = first, negate(first)
-    return sat_rec(pos, s, set()) or sat_rec(neg, s, set()) 
+    return sat_rec(first, s, set()) or sat_rec(negate(first), s, set()) 
 
 def sat_rec(literal: Formula, clauses: list[set[Formula]], visited_literals: set):
     if negate(literal) in visited_literals:
@@ -83,8 +82,7 @@ def distribute(f: Formula) -> Formula:
     return f
 
 def get_clauses_list(f: Formula) -> list[set[Formula]]:
-    clauses = all_clauses_from_cnf(f)
-    return all_literals_from_cnf(clauses)
+    return all_literals_from_cnf(all_clauses_from_cnf(f))
 
 def all_clauses_from_cnf(f: Formula) -> set[Formula]:
     def acc_clauses(f: Formula, s: set[Formula]):
