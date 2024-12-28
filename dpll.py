@@ -4,35 +4,28 @@ def sat_dpll(f: Formula):
     formula = f
     if not is_cnf(f):
         formula = to_cnf(f)
-    s = cnf_to_set(formula)
+    s = remove_duplicates(cnf_to_set(formula))
     first = next(iter(s[-1]))
-    s.pop()
     pos, neg = first, negate(first)
     return sat_rec(pos, s) or sat_rec(neg, s) 
 
 def sat_rec(f: Formula, lst: list[set[Formula]]):
-    i = 0
-    lst = remove_duplicates(lst)
-    interp = {}
     while True:
-        if isinstance(f, Atom):
-            interp[f] = True
-        if isinstance(f, Not):
-            interp[f.inner] = False 
         if not lst:
-            return interp
-        if f not in lst[i] and negate(f) not in lst[i]:
-            f = next(iter(lst[i]))
-            i+=1
+            return True
+        if f not in lst[-1] and negate(f) not in lst[-1]:
+            if lst[-1] == set():
+                return False
+            f = next(iter(lst[-1]))
             continue
-        if f in lst[i]:
-            lst.pop(i)
+        if f in lst[-1]:
+            lst.pop()
             continue
-        if negate(f) in lst[i]:
-            lst[i].discard(negate(f))
-            if lst[i] == {}:
-                return None
-            f = next(iter(lst[i]))
+        if negate(f) in lst[-1]:
+            lst[-1].discard(negate(f))
+            if lst[-1] == set():
+                return False
+            f = next(iter(lst[-1]))
             continue
 
 def remove_duplicates(lst):
@@ -130,3 +123,10 @@ formula_set = cnf_to_set(formula_cnf)
 print(f"Formula: {formula}")
 print(f"Formula equivalente na CNF: {formula_cnf}")
 print(f"CNF como set: {formula_set}")
+formula_unsat = And(Atom('p'), Not(Atom('p')))
+formula_sat = Implies(Atom('p'), Atom('q'))
+formula_valid = Or(Atom('p'), Not(Atom('p')))
+
+print(f"is {formula_unsat} satisfiable? {sat_dpll(formula_unsat)}")
+print(f"is {formula_sat} satisfiable? {sat_dpll(formula_sat)}")
+print(f"is {formula_valid} satisfiable? {sat_dpll(formula_valid)}")
