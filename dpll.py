@@ -1,10 +1,9 @@
 from formula import Formula, Not, Or, And, Implies, Atom
 from functions import is_cnf
+
 def sat_dpll(f: Formula):
-    formula = f
-    if not is_cnf(f):
-        formula = to_cnf(f)
-    s = get_clauses_list(formula)
+    f = to_cnf(f) if not is_cnf(f) else f
+    s = get_clauses_list(f)
     first = next(iter(s[-1]))
     pos, neg = first, negate(first)
     return sat_rec(pos, s, set()) or sat_rec(neg, s, set()) 
