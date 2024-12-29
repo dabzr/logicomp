@@ -10,6 +10,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from formula import Atom, And, Or, Not
 from semantics import satisfiability_brute_force
+from dpll import sat_dpll
 
 meeting_monday = Atom('reuniao na segunda')
 meeting_tuesday = Atom('reuniao na terca')
@@ -37,7 +38,7 @@ david = And(
             ),
             Not(meeting_monday)
         )
-
 all_requirements = And(And(And(adam, bridget), charles), david)
 
-print(satisfiability_brute_force(all_requirements))
+print(sat_dpll(all_requirements))
+print(satisfiability_brute_force(all_requirements)) # OUTPUT: False

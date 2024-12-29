@@ -4,6 +4,7 @@ from functions import is_cnf
 def sat_dpll(f: Formula):
     f = to_cnf(f) if not is_cnf(f) else f
     s = get_clauses_list(f)
+    print(s)
     first = next(iter(s[-1]))
     return sat_rec(first, s, set()) or sat_rec(negate(first), s, set()) 
 
@@ -87,8 +88,7 @@ def get_clauses_list(f: Formula) -> list[set[Formula]]:
 def all_clauses_from_cnf(f: Formula) -> set[Formula]:
     def acc_clauses(f: Formula, s: set[Formula]):
         if isinstance(f, And):
-            s.add(f.left)
-            return acc_clauses(f.right, s)
+            return acc_clauses(f.left, s) | acc_clauses(f.right, s)
         s.add(f)
         return s
     return acc_clauses(f, set())
@@ -96,9 +96,8 @@ def all_clauses_from_cnf(f: Formula) -> set[Formula]:
 def all_literals_from_cnf(clauses: set[Formula]) -> list[set[Formula]]:
     def literals_in_clause(f: Formula, s: set[Formula]):
         if isinstance(f, Or):
-            s.add(f.left)
-            return literals_in_clause(f.right, s)
+            return literals_in_clause(f.left, s) | literals_in_clause(f.right, s)
         s.add(f)
         return s
-    return list((map(lambda x: literals_in_clause(x, set()), clauses)))
+    return list(map(lambda x: literals_in_clause(x, set()), clauses))
 
