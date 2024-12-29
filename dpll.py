@@ -3,20 +3,48 @@ from functions import is_cnf
 
 def sat_dpll(f: Formula):
     f = to_cnf(f) if not is_cnf(f) else f
-    s = get_clauses_list(f)
-    first = next(iter(s[0]))
-    return sat_rec(first, s, set()) or sat_rec(negate(first), s, set()) 
+    clauses = get_clauses_list(f)
+    return dpll(clauses, set())
 
-def sat_rec(literal: Formula, clauses: list[set[Formula]], visited_literals_neg: set):
+def dpll(clauses: list[set[Formula]], assignment: set[Formula]) -> bool:
+    clauses = pure_literal_elimination(unit_propagate(clauses))
+
     if not clauses:
-        return True
-    visited_literals_neg.add(negate(literal))
-    if literal in clauses[0]:
-        return sat_rec(literal, clauses[1:], visited_literals_neg)
-    clauses[0] = clauses[0] - visited_literals_neg
-    if clauses[0] == set():
+        return True 
+    if any(clause == set() for clause in clauses):
         return False
-    return sat_rec(next(iter(clauses[0])), clauses, visited_literals_neg)
+
+    literal = choose_literal(clauses)
+    return dpll(
+        [clause - {literal} for clause in clauses if literal not in clause],
+        assignment | {literal}
+    ) or dpll(
+        [clause - {negate(literal)} for clause in clauses if negate(literal) not in clause],
+        assignment | {negate(literal)}
+    )
+
+def unit_propagate(clauses: list[set[Formula]]) -> list[set[Formula]]:
+    while True:
+        unit_clauses = [clause for clause in clauses if len(clause) == 1]
+        if not unit_clauses:
+            break
+        unit_literal = next(iter(unit_clauses[0]))
+        clauses = [clause - {negate(unit_literal)} for clause in clauses if unit_literal not in clause]
+    return clauses
+
+def pure_literal_elimination(clauses: list[set[Formula]]) -> list[set[Formula]]:
+    all_literals = {literal for clause in clauses for literal in clause}
+    pure_literals = {literal for literal in all_literals if negate(literal) not in all_literals}
+    for pure_literal in pure_literals:
+        clauses = [clause for clause in clauses if pure_literal not in clause]
+    return clauses
+
+def choose_literal(clauses: list[set[Formula]]) -> Formula:
+    literal_counts = {}
+    for clause in clauses:
+        for literal in clause:
+            literal_counts[literal] = literal_counts.get(literal, 0) + 1
+    return max(literal_counts, key=lambda x: literal_counts[x])
 
 def negate(f: Formula) -> Formula:
     if isinstance(f, Not):

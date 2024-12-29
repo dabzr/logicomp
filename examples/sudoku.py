@@ -194,7 +194,7 @@ def sudoku_solution(grid):
         subgrids_constrains(grid)
     )
 #    start_time = time.time()
-    solution = sat_interpretation(final_formula)
+    solution = sat_interpretation(final_formula) is not False
     print(f"Is that sudoku satisfiable? {solution}")
 #    end_time = time.time()
 """
@@ -229,32 +229,19 @@ def sudoku_solution_dpll(grid):
     solution = sat_dpll(final_formula)
     print(f"Is that sudoku satisfiable? {solution}")
 
-teste = grid_test1
+teste = grid_test2
 print("sudoku: ")
 for i in teste:
     print(i)
 
-#print('Solução do sudoku (dpll):')
-#start_time = time.time()
+print('Solução do sudoku (dpll):')
+start_time = time.time()
 sudoku_solution_dpll(teste)
-#end_time = time.time()
-#print('Time:', end_time - start_time)
+end_time = time.time()
+print('Time:', end_time - start_time)
 
-formula_teste = And(Atom('p'), Not(Atom('p')))
-print(f'{formula_teste} é satisfativel? {sat_dpll(formula_teste)}')
-formula_teste = And(Or(Atom('p'), Atom('q')), And(Not(Atom('p')), Not(Atom('q'))))
-print(f'{formula_teste} é satisfativel? {sat_dpll(formula_teste)}')
-formula_teste = And(Or(Atom('p'), Atom('q')), And(Or(Not(Atom('p')), Not(Atom('q'))), And(Atom('p'), Atom('q'))))
-print(f'{formula_teste} é satisfativel? {sat_dpll(formula_teste)}')
-formula_teste = And(Implies(Atom('p'), Atom('q')), And(Atom('p'), Not(Atom('q'))))
-print(f'{formula_teste} é satisfativel? {sat_dpll(formula_teste)}')
-formula_sat = Implies(Atom('p'), Atom('q'))
-formula_valid = Or(Atom('p'), Not(Atom('p')))
-print(f"{formula_sat} é satisfativel? {sat_dpll(formula_sat)}")
-print(f"{formula_valid} satisfativel? {sat_dpll(formula_valid)}")
-
-#start_time = time.time()
-#print('Solução do sudoku (brute force):')
-#sudoku_solution(teste)
-#end_time = time.time()
-#print('Time:', end_time - start_time)
+start_time = time.time()
+print('Solução do sudoku (brute force):')
+sudoku_solution(teste)
+end_time = time.time()
+print('Time:', end_time - start_time)
