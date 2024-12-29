@@ -4,23 +4,19 @@ from functions import is_cnf
 def sat_dpll(f: Formula):
     f = to_cnf(f) if not is_cnf(f) else f
     s = get_clauses_list(f)
-    print(s)
-    first = next(iter(s[-1]))
+    first = next(iter(s[0]))
     return sat_rec(first, s, set()) or sat_rec(negate(first), s, set()) 
 
-def sat_rec(literal: Formula, clauses: list[set[Formula]], visited_literals: set):
-    if negate(literal) in visited_literals:
-        return False
+def sat_rec(literal: Formula, clauses: list[set[Formula]], visited_literals_neg: set):
     if not clauses:
         return True
-    visited_literals.add(literal)
-    if literal in clauses[-1]:
-        return sat_rec(literal, clauses[:-1], visited_literals)
-    if negate(literal) in clauses[-1]:
-        if clauses[-1] == {negate(literal)}:
-            return False
-        clauses[-1].remove(negate(literal))
-    return sat_rec(next(iter(clauses[-1])), clauses, visited_literals)
+    visited_literals_neg.add(negate(literal))
+    if literal in clauses[0]:
+        return sat_rec(literal, clauses[1:], visited_literals_neg)
+    clauses[0] = clauses[0] - visited_literals_neg
+    if clauses[0] == set():
+        return False
+    return sat_rec(next(iter(clauses[0])), clauses, visited_literals_neg)
 
 def negate(f: Formula) -> Formula:
     if isinstance(f, Not):
