@@ -24,7 +24,6 @@ grid_test2 = [[0, 4, 3, 2],
 
 grid_test3 = [[0, 0, 0, 3],
               [0, 4, 0, 0],
-
               [0, 0, 3, 2],
               [0, 0, 0, 0]]
 
@@ -229,7 +228,7 @@ def sudoku_solution_dpll(grid):
     solution = sat_dpll(final_formula)
     print(f"Is that sudoku satisfiable? {solution}")
 
-teste = grid_test2
+teste = grid_test1
 print("sudoku: ")
 for i in teste:
     print(i)
@@ -238,10 +237,10 @@ print('Solução do sudoku (dpll):')
 start_time = time.time()
 sudoku_solution_dpll(teste)
 end_time = time.time()
-print('Time:', end_time - start_time)
+print(f'Time: {str((end_time-start_time)*1000)[:5]} ms')
 
 start_time = time.time()
 print('Solução do sudoku (brute force):')
 sudoku_solution(teste)
 end_time = time.time()
-print('Time:', end_time - start_time)
+print(f'Time: {str((end_time-start_time)*1000)[:5]} ms')

@@ -3,24 +3,19 @@ from functions import is_cnf
 
 def sat_dpll(f: Formula):
     f = to_cnf(f) if not is_cnf(f) else f
-    clauses = get_clauses_list(f)
-    return dpll(clauses, set())
+    clauses = pure_literal_elimination(unit_propagate(get_clauses_list(f)))
+    return dpll(clauses)
 
-def dpll(clauses: list[set[Formula]], assignment: set[Formula]) -> bool:
-    clauses = pure_literal_elimination(unit_propagate(clauses))
-
+def dpll(clauses: list[set[Formula]]) -> bool:
     if not clauses:
         return True 
     if any(clause == set() for clause in clauses):
         return False
-
     literal = choose_literal(clauses)
     return dpll(
-        [clause - {literal} for clause in clauses if literal not in clause],
-        assignment | {literal}
+        [clause for clause in clauses if literal not in clause]
     ) or dpll(
-        [clause - {negate(literal)} for clause in clauses if negate(literal) not in clause],
-        assignment | {negate(literal)}
+        [clause for clause in clauses if negate(literal) not in clause]
     )
 
 def unit_propagate(clauses: list[set[Formula]]) -> list[set[Formula]]:
