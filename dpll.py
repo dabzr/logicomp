@@ -47,7 +47,22 @@ def negate(f: Formula) -> Formula:
     return Not(f)
 
 def to_cnf(f: Formula) -> Formula:
-    return distribute(double_neg_remove(de_morgan(replace_implies(f))))
+    formula = replace_implies(f)
+    while can_de_morgan(formula):
+        formula = de_morgan(formula)
+    formula = double_neg_remove(formula)
+    while not is_cnf(formula):
+        formula = distribute(formula)
+    return formula
+
+def can_de_morgan(f: Formula) -> bool:
+    if isinstance(f, Not):
+        if isinstance(f.inner, (And, Or)):
+            return True
+        return False or can_de_morgan(f.inner)
+    if isinstance(f, (And, Or, Implies)):
+        return False or can_de_morgan(f.left) or can_de_morgan(f.right)
+    return False
 
 def replace_implies(f: Formula) -> Formula:
     if isinstance(f, Implies):
@@ -63,7 +78,7 @@ def replace_implies(f: Formula) -> Formula:
 def de_morgan(f: Formula) -> Formula:
     if isinstance(f, Not):
         if isinstance(f.inner, And):
-            return Or(Not(de_morgan(f.inner.left)), Not(de_morgan(f.inner.right)))
+            return Or(de_morgan(f.inner.left), Not(de_morgan(f.inner.right)))
         if isinstance(f.inner, Or):
             return And(Not(de_morgan(f.inner.left)), Not(de_morgan(f.inner.right)))
         return Not(de_morgan(f.inner))
@@ -91,7 +106,11 @@ def double_neg_remove(f: Formula) -> Formula:
 def distribute(f: Formula) -> Formula:
     if isinstance(f, Or):
         if isinstance(f.left, And):
-            return And(Or(distribute(f.left.left), distribute(f.right)), Or(distribute(f.left.right), distribute(f.right)))
+            rd = distribute(f.right)
+            return And(Or(distribute(f.left.left), rd), Or(distribute(f.left.right), rd))
+        if isinstance(f.right, And):
+            ld = distribute(f.left)
+            return And(Or(ld, distribute(f.right.left)), Or(ld, distribute(f.right.right)))
         return Or(distribute(f.left), distribute(f.right))
     if isinstance(f, Not):
         return Not(distribute(f.inner))
